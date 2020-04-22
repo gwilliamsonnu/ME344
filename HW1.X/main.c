@@ -59,9 +59,8 @@ int main() {
         // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
         // remember the core timer runs at half the sysclk
         //LATAbits.LATA4 = 1; test: LED works
-        
-        if (PORTBbits.RB4 = 0) {
-            _CP0_SET_COUNT(0);
+        _CP0_SET_COUNT(0);
+        if (PORTBbits.RB4 == 0) {
             LATAbits.LATA4 = 1;
             while (_CP0_GET_COUNT() < 24000000/2) {}
             _CP0_SET_COUNT(0);
