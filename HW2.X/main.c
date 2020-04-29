@@ -94,7 +94,7 @@ int main() {
         spi_io(p>>8);
         spi_io(p);
         LATAbits.LATA0 = 1;
-
+/*
         if (counter % 2 == 0) {
             c = 0b0;   // channel B
             p = (c<<15);
@@ -106,14 +106,14 @@ int main() {
             spi_io(p);
             LATAbits.LATA0 = 1;
         }
-
+*/
         counter +=1;
         if (counter == 19) {
             counter = 0;
         }
 
         _CP0_SET_COUNT(0);
-        while (_CP0_GET_COUNT() < 24000000/20) {}
+        while (_CP0_GET_COUNT() < 24000000/2) {}
 
     }
 
@@ -136,7 +136,7 @@ void initSPI() {
     // setup SPI1
     SPI1CON = 0; // turn off the spi module and reset it
     SPI1BUF; // clear the rx buffer by reading from it
-    SPI1BRG = 1000; // 1000 for 24kHz, 1 for 12MHz; // baud rate to 10 MHz [SPI1BRG = (48000000/(2*desired))-1]
+    SPI1BRG = 2000; // 1000 for 24kHz, 1 for 12MHz; // baud rate to 10 MHz [SPI1BRG = (48000000/(2*desired))-1]
     SPI1STATbits.SPIROV = 0; // clear the overflow bit
     SPI1CONbits.CKE = 1; // data changes when clock goes from hi to lo (since CKP is 0)
     SPI1CONbits.MSTEN = 1; // master operation
