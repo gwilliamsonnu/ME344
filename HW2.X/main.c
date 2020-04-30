@@ -88,7 +88,7 @@ int main() {
         c = 0b1;   // channel A
         p = (c<<15);
         p = p|(0b111<<12);
-        p = p|(s[counter]);
+        p = p|(t[counter]);
 
         LATAbits.LATA0 = 0;
         spi_io(p>>8);
