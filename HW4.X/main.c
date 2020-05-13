@@ -65,17 +65,24 @@ int main() {
     i2c_master_setup();
     ssd1306_setup();
     
-    //ssd1306_drawLetter('&', 0, 0);  
-    char message[50] = "Hello World";
+     
     
-    ssd1306_drawString(0,0, message);
-    while (1) {
-        
-        
-/*        
+    ssd1306_drawString(0, 0, "Hello, world!");
+    
+    float r;
+    int n = 0;
+    char num[20];
+    char frate[20];
+    
+    while (1) {        
         _CP0_SET_COUNT(0);
-        while (_CP0_GET_COUNT() < 24000000/2) {}
-*/
+        n++;
+        sprintf(frate, "i = %d", n);
+        ssd1306_drawString(0, 2, frate);
+        //ssd1306_update();
+        r = _CP0_GET_COUNT();
+        sprintf(frate, "FPS = %5.6f", 12000000/r);
+        ssd1306_drawString(0, 3, frate);
     }
 
 }

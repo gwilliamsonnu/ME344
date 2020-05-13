@@ -101,7 +101,7 @@ void ssd1306_drawLetter(unsigned char l, unsigned int lcx, unsigned int lcy) {  
             ssd1306_drawPixel(x+(5*lcx), y+(8*lcy), (((ASCII[Lascii][x])>>y)&1));
         }
     }
-    ssd1306_update();
+    //ssd1306_update();
 }
 
 void ssd1306_drawString(int sx, int sy, char *mes) {
@@ -111,7 +111,7 @@ void ssd1306_drawString(int sx, int sy, char *mes) {
     int i=0; 
 //    for (i=0; strlen(mes); i++) 
     while (mes[i] != '\0') {
-        ssd1306_drawLetter(mes[i], lcount, rowcount); 
+        ssd1306_drawLetter(mes[i], sx+lcount, sy+rowcount); 
         lcount++;
         i++;
         if (lcount==25) {
