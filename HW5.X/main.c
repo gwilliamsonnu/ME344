@@ -61,18 +61,32 @@ int main() {
     __builtin_enable_interrupts();
 
     ws2812b_setup();
-    
-    int cols[5] = {0, 72, 144, 216, 288};
-    int i=0;
-    wsColor q;
-    while (1) {
-        for (i=0; i<5; i++) {
-            q = HSBtoRGB(cols[i], 1, .1);
-            ws2812b_setColor(&q, 4);
-            _CP0_SET_COUNT(0);
-            while (_CP0_GET_COUNT() < 24000000/2) {}
-        }        
+  
+    int cs[12] = {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};   
+    int l = sizeof(cs);
+    wsColor cols[l];
+    int i;
+    for (i=0; i<4; i++) {
+        cols[i] = HSBtoRGB(cs[i], 1, .05);
     }
+    
+    ws2812b_setColor(cols, 4);
+    
+    
+    int j, k;
+    while (1) {       
+        for (j=0; j<(9); j++) {
+            wsColor cols2[4];
+            for (k=0; k<4; k++) {
+                cols2[k] = HSBtoRGB(cs[j+k], 1, .05);;
+            }
+            ws2812b_setColor(cols2, 4);
+            
+            _CP0_SET_COUNT(0);
+            while (_CP0_GET_COUNT() < 24000000/1) {}
+        }                              
+    }
+    
 
 }
 
