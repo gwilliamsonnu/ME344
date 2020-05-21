@@ -1,7 +1,12 @@
 #include<xc.h>           // processor SFR definitions
 #include<sys/attribs.h>  // __ISR macro
 #include <math.h>
+#include "imu.h"
 #include "ws2812b.h"
+#include "i2c.h"
+#include "ssd.h"
+#include "font.h"
+
 
 
 // DEVCFG0
@@ -60,26 +65,44 @@ int main() {
     
     __builtin_enable_interrupts();
 
+    // SETUPS for i2c, display, IMU, and LEDS
+    i2c_master_setup();
+    ssd1306_setup();
+    imu_setup();
     ws2812b_setup();
-  
-    int cs[15] = {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 0, 30, 60};   
-    int l = (sizeof(cs))/(sizeof(int));
- 
-    int j, k;
-    while (1) {       
-        for (j=0; j<(l-3); j++) {
-            wsColor cols2[4];
-            for (k=0; k<4; k++) {
-                cols2[k] = HSBtoRGB(cs[j+k], 1, .05);;
-            }
-            ws2812b_setColor(cols2, 4);
-            
-            _CP0_SET_COUNT(0);
-            while (_CP0_GET_COUNT() < 24000000/20) {}
-        }                              
-    }
-    
 
+    unsigned char WA, RA;
+    
+    WA = 0b11010110; // Write address
+    RA = 0b11010111; // Read address 
+    
+    signed short vals[7];
+    
+    
+    while (1) { 
+        
+        imu_read(IMU_OUT_TEMP_L, vals, 7); // read from chip and store all values in array
+        
+        // Print acceleration readings
+        char accel[50];
+        sprintf(accel, "A: x=%d; y=%d; z=%d", vals[4], vals[5], vals[6]);
+        ssd1306_drawString(0, 0, accel);
+        
+        // Print gyroscope readings
+        char gyro[50];
+        sprintf(gyro, "G: x=%d; y=%d; z=%d", vals[1], vals[2], vals[3]);
+        ssd1306_drawString(0, 1, gyro);
+        
+        // Print temperature reading
+        char temp[20];
+        sprintf(temp, "T: t=%d", vals[0]);
+        ssd1306_drawString(0, 2, temp);
+        
+        /*
+        _CP0_SET_COUNT(0);
+        while (_CP0_GET_COUNT() < 24000000/20) {}
+         */                                      
+    }
 }
 
 
