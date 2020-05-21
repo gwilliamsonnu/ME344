@@ -12,5 +12,6 @@
 
 void imu_setup();
 void imu_read(unsigned char, signed short *, int);
+void imu_AGTs(signed short *vs);
 
 #endif

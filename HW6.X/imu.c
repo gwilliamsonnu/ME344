@@ -80,3 +80,25 @@ void imu_read(unsigned char reg, signed short * data, int len){
         data[i/2] = reads[i] | ((reads[i+1]) << 8);     
     }
 }
+
+
+void imu_AGTs(signed short *vs) {
+    // VS MUST BE A SIGNED SHORT ARRAY OF SIZE SEVEN
+    
+    imu_read(IMU_OUT_TEMP_L, vs, 7); // read from chip and store all values in array
+        
+    // Print acceleration readings
+    char accel[50];
+    sprintf(accel, "A: x=%d; y=%d; z=%d", vs[4], vs[5], vs[6]);
+    ssd1306_drawString(0, 0, accel);
+
+    // Print gyroscope readings
+    char gyro[50];
+    sprintf(gyro, "G: x=%d; y=%d; z=%d", vs[1], vs[2], vs[3]);
+    ssd1306_drawString(0, 1, gyro);
+
+    // Print temperature reading
+    char temp[20];
+    sprintf(temp, "T: t=%d", vs[0]);
+    ssd1306_drawString(0, 2, temp);
+}

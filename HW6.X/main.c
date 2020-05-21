@@ -78,30 +78,49 @@ int main() {
     
     signed short vals[7];
     
+
     
     while (1) { 
         
-        imu_read(IMU_OUT_TEMP_L, vals, 7); // read from chip and store all values in array
+        /* imu_AGTs(vals); */
         
-        // Print acceleration readings
-        char accel[50];
-        sprintf(accel, "A: x=%d; y=%d; z=%d", vals[4], vals[5], vals[6]);
-        ssd1306_drawString(0, 0, accel);
         
-        // Print gyroscope readings
-        char gyro[50];
-        sprintf(gyro, "G: x=%d; y=%d; z=%d", vals[1], vals[2], vals[3]);
-        ssd1306_drawString(0, 1, gyro);
+        imu_read(IMU_OUT_TEMP_L, vals, 7);
         
-        // Print temperature reading
-        char temp[20];
-        sprintf(temp, "T: t=%d", vals[0]);
-        ssd1306_drawString(0, 2, temp);
+        // Inclinometer origin at (63,15)
         
-        /*
+        int Ax, Ay, i, j, k, l;
+        // X Accelerations           
+        j=0;
+        Ax = vals[4];
+        for (i=0; i<(abs(Ax)); i+=1092) {  // plot a pixel in increments of 1092 (roughly 16383/15)
+            if (Ax>0) {  // if positive acceleration, plot right
+                ssd1306_drawPixel(63, 15+j, 1);                 
+            }
+            else {  // if negative acceleration, plot left
+                ssd1306_drawPixel(63, 15-j, 1);                 
+            }
+            j++;
+        }
+        
+        // Y Accelerations
+        l=0;
+        Ay = vals[5];
+        for (k=0; k<(abs(Ay)); k+=260) {  // plot a pixel in increments of 260 (roughly 16383/63)
+            if (Ay>0) {  // if positive acceleration, plot right
+                ssd1306_drawPixel(63-l, 15, 1);                 
+            }
+            else {  // if negative acceleration, plot left
+                ssd1306_drawPixel(63+l, 15, 1);                 
+            }
+            l++;
+        }
+        
+        //ssd1306_clear();
+        ssd1306_update();
         _CP0_SET_COUNT(0);
         while (_CP0_GET_COUNT() < 24000000/20) {}
-         */                                      
+                                              
     }
 }
 
