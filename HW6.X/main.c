@@ -84,7 +84,7 @@ int main() {
         
         /* imu_AGTs(vals); */
         
-        
+        ssd1306_clear();
         imu_read(IMU_OUT_TEMP_L, vals, 7);
         
         // Inclinometer origin at (63,15)
@@ -95,7 +95,8 @@ int main() {
         Ax = vals[4];
         for (i=0; i<(abs(Ax)); i+=1092) {  // plot a pixel in increments of 1092 (roughly 16383/15)
             if (Ax>0) {  // if positive acceleration, plot right
-                ssd1306_drawPixel(63, 15+j, 1);                 
+                ssd1306_drawPixel(63, 15+j, 1);
+                
             }
             else {  // if negative acceleration, plot left
                 ssd1306_drawPixel(63, 15-j, 1);                 
@@ -116,8 +117,9 @@ int main() {
             l++;
         }
         
-        //ssd1306_clear();
+       
         ssd1306_update();
+        
         _CP0_SET_COUNT(0);
         while (_CP0_GET_COUNT() < 24000000/20) {}
                                               
